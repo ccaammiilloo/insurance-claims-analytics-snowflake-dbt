@@ -1,0 +1,100 @@
+/// Vehicle dimension. Grain is one vehicle per policy in this book.
+table DIM_VEHICLE
+	lineageTag: d7d8460f-fb92-58e7-bf30-d2bac4d15276
+
+	column VEHICLE_SK
+		dataType: string
+		lineageTag: 4e3384b9-ae9e-561c-9d73-07a289fde8a3
+		sourceColumn: VEHICLE_SK
+		summarizeBy: none
+		isKey
+		isUnique
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_SK
+		dataType: string
+		lineageTag: 5a894041-44a4-58f8-aa18-24b2f1c180e2
+		sourceColumn: POLICY_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f20a079-acac-58d6-8cfc-b0aea8fead9e
+		sourceColumn: POLICY_ID
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEH_POWER
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d4cecaf-4a83-55ce-b539-69e62f12a764
+		sourceColumn: VEH_POWER
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEH_AGE
+		dataType: int64
+		formatString: 0
+		lineageTag: 197498cf-c5ed-583b-8fac-626c30da0064
+		sourceColumn: VEH_AGE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEH_AGE_BAND
+		dataType: string
+		lineageTag: 6b026cd8-336c-528a-823a-6c06a24d894c
+		sourceColumn: VEH_AGE_BAND
+		sortByColumn: VEH_AGE_BAND_SORT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEH_AGE_BAND_SORT =
+			SWITCH ( 'DIM_VEHICLE'[VEH_AGE_BAND], "0", 0, "1-4", 1, "5-9", 5, "10-14", 10, "15-19", 15, "20+", 20, 99 )
+		dataType: int64
+		formatString: 0
+		lineageTag: dbf6bedb-f60c-51fe-9f4d-9ccfc9a56934
+		summarizeBy: none
+		isHidden
+
+	column VEH_BRAND
+		dataType: string
+		lineageTag: d62d6104-2a78-58be-b743-b91d12dd3551
+		sourceColumn: VEH_BRAND
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEH_GAS
+		dataType: string
+		lineageTag: 65c98318-f2b5-5505-a939-c7bb3446ce72
+		sourceColumn: VEH_GAS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_NEW_VEHICLE
+		dataType: boolean
+		lineageTag: 0bf554b8-568b-56ff-bb33-e510c52f9bab
+		sourceColumn: IS_NEW_VEHICLE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_VEHICLE_AGE_SENTINEL
+		dataType: boolean
+		lineageTag: 6633799b-4597-574d-97d5-dbfc0a61a2be
+		sourceColumn: IS_VEHICLE_AGE_SENTINEL
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition DIM_VEHICLE = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="DIM_VEHICLE",Kind="Table"]}[Data]
+			in
+				#"DataTable"

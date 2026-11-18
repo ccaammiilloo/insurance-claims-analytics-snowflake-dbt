@@ -1,0 +1,71 @@
+/// Driver dimension. Grain is one recorded driver per policy.
+table DIM_DRIVER
+	lineageTag: f20ac09c-c67c-5ab5-afaf-75b76ef05106
+
+	column DRIVER_SK
+		dataType: string
+		lineageTag: 9e8702d6-3bd1-5b62-801e-430dc77b024f
+		sourceColumn: DRIVER_SK
+		summarizeBy: none
+		isKey
+		isUnique
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_SK
+		dataType: string
+		lineageTag: 94b2aa9a-17b3-5cac-911b-055c6ef82dd7
+		sourceColumn: POLICY_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e501310-cee6-5958-a35b-67b96c60f918
+		sourceColumn: POLICY_ID
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column DRIV_AGE
+		dataType: int64
+		formatString: 0
+		lineageTag: 061d415d-ae4b-5368-8053-38f099984fed
+		sourceColumn: DRIV_AGE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column DRIV_AGE_BAND
+		dataType: string
+		lineageTag: e01356ee-d57f-5fc9-9845-5cfd928ff0dc
+		sourceColumn: DRIV_AGE_BAND
+		sortByColumn: DRIV_AGE_BAND_SORT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column DRIV_AGE_BAND_SORT =
+			SWITCH ( 'DIM_DRIVER'[DRIV_AGE_BAND], "18-25", 18, "26-35", 26, "36-45", 36, "46-55", 46, "56-65", 56, "66-75", 66, "76+", 76, 99 )
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b841fac-c132-5606-843a-507901369694
+		summarizeBy: none
+		isHidden
+
+	column IS_DRIVER_AGE_SENTINEL
+		dataType: boolean
+		lineageTag: 29841614-8b91-5ddb-8654-ebdb683b5fd0
+		sourceColumn: IS_DRIVER_AGE_SENTINEL
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition DIM_DRIVER = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="DIM_DRIVER",Kind="Table"]}[Data]
+			in
+				#"DataTable"

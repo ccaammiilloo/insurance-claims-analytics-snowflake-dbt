@@ -1,0 +1,5 @@
+/// Non-secret Snowflake connection parameters for Power BI Desktop import.
+/// Credentials stay in Desktop's credential store and are matched by server.
+expression SnowflakeServer = "wngvror-ly04177.snowflakecomputing.com" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression SnowflakeWarehouse = "COMPUTE_WH" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression SnowflakeRole = "INSURANCE_PBI_READONLY" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]

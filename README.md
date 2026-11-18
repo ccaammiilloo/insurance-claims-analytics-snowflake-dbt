@@ -1,6 +1,6 @@
 # Insurance claims analytics with Snowflake, dbt, and Power BI
 
-This project shows how I would support a reporting migration like the one at HDI Global Insurance. Raw policy and claims data lands in Snowflake in a shape that looks like extracts from a Guidewire style policy system and claims system. dbt then stages, tests, and models that data into a star schema. Power BI Service is the reporting layer that would replace a legacy Qlik dashboard.
+This project shows how I would support a reporting migration like the one at HDI Global Insurance. Raw policy and claims data lands in Snowflake in a shape that looks like extracts from a Guidewire style policy system and claims system. dbt then stages, tests, and models that data into a star schema. Power BI Desktop is the reporting layer that would replace a legacy Qlik dashboard.
 
 The source is not a live Guidewire extract. It is the public French MTPL book freMTPL2, used here as a stand in for policy and claims feeds. There is no premium column in the files, so this project does not compute a loss ratio and does not invent one.
 
@@ -15,7 +15,7 @@ flowchart LR
   C --> D[dbt staging]
   D --> E[Claim count reconciliation]
   E --> F[Marts: dimensions, facts, risk segments]
-  F --> G[Power BI Service]
+  F --> G[Power BI Desktop]
 ```
 
 The raw layer splits the flat frequency file into `POLICIES`, `VEHICLES`, and `DRIVERS`, and lands each severity row in `CLAIMS`. Surrogate keys and a claim sequence are the only business derivations in that step. dbt adds type cleanup, quality flags, documented age and bonus malus bands, and the measures used for reporting: claim frequency, average severity, and pure premium.
@@ -121,18 +121,17 @@ dbt writes staging, intermediate, marts, and seeds into their own schemas. Power
 
 ## Power BI report
 
-The planned Power BI Service report is the visualization layer that would replace a Qlik app after the Snowflake and dbt work. Official measures are Claim Frequency, Average Severity, Pure Premium, Exposure, and Claim Count. There is no Loss Ratio measure, because the source has no premium.
+The Power BI Desktop project in `powerbi/` is the visualization layer that would replace a Qlik app after the Snowflake and dbt work. Open `powerbi/InsurancePortfolio.pbip`, enter your Snowflake username and password when Desktop prompts you, and refresh. The files have no credentials. A packed copy is at `powerbi/InsurancePortfolio-PBIP.zip`. Spanish step by step instructions are in `docs/powerbi_abrir_es.md`. The totals to check after refresh are in `docs/powerbi_expected_numbers.md`.
 
-**Screenshots will be added once the report is published.** This section is a placeholder on purpose. I am not including mock or generated images here.
+Official measures are Claim Frequency, Average Severity, Pure Premium, Exposure, Claim Count, and the related portfolio and quality measures in the model. There is no Loss Ratio measure, because the source has no premium.
 
-The planned pages are:
+**Screenshots will be added once the report has been refreshed in Power BI Desktop.** This section is a placeholder on purpose. I am not including mock or generated images here.
 
-1. Executive overview, with the book KPIs.
-2. Territory risk by area and region.
-3. Driver and vehicle risk, including the new vehicle caveat.
-4. Bonus malus and portfolio mix.
-5. Data quality and migration trust, so source issues stay visible.
-6. Claim detail, with large claims kept out of the official KPI cards when they are orphan records.
+The report has three pages:
+
+1. Portfolio Overview, with the book KPIs and segment charts for area, region, and fuel type.
+2. Risk Drivers, with claim frequency by driver age, vehicle age, vehicle power, area, region, and bonus malus, plus a table that compares claim count with matched severity rows.
+3. Data Quality and Reconciliation, so missing severity, orphan claims, duplicate amount rows, and exposure greater than one year stay visible.
 
 ## Project layout
 
@@ -143,6 +142,9 @@ The planned pages are:
 - `dbt/` is the dbt project, with tests that lock the full book totals when `book_scope` is `full`.
 - `sql/snowflake/` has the Snowflake DDL and a `COPY INTO` template.
 - `docs/power_bi_design.md` describes the star schema and DAX measures.
+- `docs/powerbi_abrir_es.md` is the Spanish guide for opening the Desktop project and taking screenshots.
+- `docs/powerbi_expected_numbers.md` is the checklist of book totals to confirm after refresh.
+- `powerbi/` is the Power BI Project (PBIP) with the TMDL semantic model and the three page PBIR report.
 
 The code in this repository is under the MIT license. The source data remains CC0, with credit to Dutang and Charpentier.
 

@@ -1,0 +1,107 @@
+/// Policy dimension. Grain is one row per policy. BOOK_PERIOD_LABEL is a reporting convention, not a start or loss date.
+table DIM_POLICY
+	lineageTag: eed5a215-c8c9-56cd-8ca2-41704b6c29f5
+
+	column POLICY_SK
+		dataType: string
+		lineageTag: 11bd37f4-ee4e-5af5-8838-28b3624c192f
+		sourceColumn: POLICY_SK
+		summarizeBy: none
+		isKey
+		isUnique
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 97065966-84ec-5017-bf94-70252a49f54c
+		sourceColumn: POLICY_ID
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column AREA
+		dataType: string
+		lineageTag: 694db1b8-f3a3-545a-b94e-ce4e03861ce1
+		sourceColumn: AREA
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column BONUS_MALUS
+		dataType: int64
+		formatString: 0
+		lineageTag: bbaf28cc-fda4-54f9-9e9d-fb79eab30d1e
+		sourceColumn: BONUS_MALUS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column BONUS_MALUS_BAND
+		dataType: string
+		lineageTag: afa15e86-302b-55c8-a512-fb2110739a2c
+		sourceColumn: BONUS_MALUS_BAND
+		sortByColumn: BONUS_MALUS_BAND_SORT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column BONUS_MALUS_BAND_SORT =
+			SWITCH ( 'DIM_POLICY'[BONUS_MALUS_BAND], "50 (maximum bonus)", 50, "51-80", 51, "81-99", 81, "100 (reference)", 100, "101-150", 101, "151+", 151, 99 )
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a9cf62e-7b01-5d04-abb7-3cbfdd135365
+		summarizeBy: none
+		isHidden
+
+	column DENSITY
+		dataType: int64
+		formatString: #,0
+		lineageTag: 8770f48f-868e-5bbc-9702-7acc3d06e2ae
+		sourceColumn: DENSITY
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column REGION
+		dataType: string
+		lineageTag: 556a6cb0-b7b1-548d-bc1a-b2ec171fdf77
+		sourceColumn: REGION
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column REGION_NAME
+		dataType: string
+		lineageTag: af6595fc-4e4e-5ac4-9237-50528e9a73cc
+		sourceColumn: REGION_NAME
+		sortByColumn: REGION
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column BOOK_PERIOD_LABEL
+		dataType: string
+		lineageTag: 595d9132-a2ea-5716-be82-37be3e66c83e
+		sourceColumn: BOOK_PERIOD_LABEL
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_EXPOSURE_GT_ONE
+		dataType: boolean
+		lineageTag: f3a3421e-b9c9-573d-9b9d-b31eb23f68ca
+		sourceColumn: IS_EXPOSURE_GT_ONE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_EXTREME_CLAIM_COUNT
+		dataType: boolean
+		lineageTag: 43c22826-85ac-544a-89a8-232a41f5ad63
+		sourceColumn: IS_EXTREME_CLAIM_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition DIM_POLICY = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="DIM_POLICY",Kind="Table"]}[Data]
+			in
+				#"DataTable"

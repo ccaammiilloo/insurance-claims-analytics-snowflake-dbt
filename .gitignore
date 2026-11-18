@@ -18,3 +18,9 @@ dbt/.user.yml
 *.key
 id_rsa
 id_rsa.pub
+
+# Power BI Desktop local cache and credentials. Never commit these.
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+**/.pbi/*.abf
+*.pbix

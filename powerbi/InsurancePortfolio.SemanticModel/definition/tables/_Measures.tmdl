@@ -1,0 +1,193 @@
+/// Dedicated measures table. Official portfolio, quality, and claim-detail measures live here.
+table '_Measures'
+	lineageTag: 9d10c1fc-aad7-5ddf-a64f-10efec64fe07
+
+	/// Number of policies in the exposure fact. Book total is 678,013.
+	measure 'Policy Count' = COUNTROWS ( 'FCT_POLICY_EXPOSURE' )
+		formatString: #,0
+		displayFolder: Portfolio
+		lineageTag: 9f86bbd5-13b8-5320-b4e7-590fb3cc0f1c
+
+	/// Sum of exposure years. Book total is 358,499.45.
+	measure 'Exposure' = SUM ( 'FCT_POLICY_EXPOSURE'[EXPOSURE_YEARS] )
+		formatString: #,0.00
+		displayFolder: Portfolio
+		lineageTag: a367f75f-0a81-5ef1-a104-c4293055f2b8
+
+	/// Sum of ClaimNb on the exposure fact, not the severity row count. Book total is 36,102.
+	measure 'Claim Count' = SUM ( 'FCT_POLICY_EXPOSURE'[CLAIM_COUNT] )
+		formatString: #,0
+		displayFolder: Portfolio
+		lineageTag: dbaa81eb-5b65-5fa2-b9bf-c75ac832aaa8
+
+	/// Claim Count divided by Exposure. Book total is 0.100703. This is claims per exposure year, not a percentage.
+	measure 'Claim Frequency' = DIVIDE ( [Claim Count], [Exposure] )
+		formatString: 0.000000
+		displayFolder: Portfolio
+		lineageTag: 38d9598e-c94d-5b39-b09e-f904a80d7333
+
+	/// Matched claim amount on the exposure fact. Book total is 59,909,216.50. Must agree with Matched Claim Amount From Claims.
+	measure 'Matched Claim Amount' = SUM ( 'FCT_POLICY_EXPOSURE'[MATCHED_CLAIM_AMOUNT] )
+		formatString: #,0.00
+		displayFolder: Portfolio
+		lineageTag: 8f7ad424-388a-5d34-9998-dd29577bc6a9
+
+	/// Severity rows that match a policy. Book total is 26,444.
+	measure 'Matched Severity Rows' = SUM ( 'FCT_POLICY_EXPOSURE'[SEVERITY_ROW_COUNT] )
+		formatString: #,0
+		displayFolder: Portfolio
+		lineageTag: a68e1b25-0faf-5447-9102-724e9276fb59
+
+	/// Matched claim amount divided by matched severity rows. Book total is 2,265.51. Orphan claims are excluded.
+	measure 'Average Severity' = DIVIDE ( [Matched Claim Amount], [Matched Severity Rows] )
+		formatString: #,0.00
+		displayFolder: Portfolio
+		lineageTag: 1f394d57-ed70-5307-858c-601ab3baaa82
+
+	/// Matched claim amount divided by exposure. Book total is 167.11. There is no loss ratio because the source has no premium.
+	measure 'Pure Premium' = DIVIDE ( [Matched Claim Amount], [Exposure] )
+		formatString: #,0.00
+		displayFolder: Portfolio
+		lineageTag: f5f0c724-ec6c-58b7-a210-1323c42ebd09
+
+	/// Policies with Claim Count greater than zero. Book total is 34,060.
+	measure 'Policies With Claims' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_POLICY_EXPOSURE' ),
+			    'FCT_POLICY_EXPOSURE'[CLAIM_COUNT] > 0
+			)
+		formatString: #,0
+		displayFolder: Portfolio
+		lineageTag: 41cf4d62-9c4b-5aea-8a83-20ce18c6fa6c
+
+	/// Share of policies with at least one claim. Book total is 5.02%.
+	measure 'Policies With Claims %' = DIVIDE ( [Policies With Claims], [Policy Count] )
+		formatString: 0.00%
+		displayFolder: Portfolio
+		lineageTag: 3d74fec4-7b9c-586d-8144-8b1ac2ab8499
+
+	/// Policies with Claim Count greater than zero and no severity row. Book total is 9,116.
+	measure 'Policies With Missing Severity' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_POLICY_EXPOSURE' ),
+			    'FCT_POLICY_EXPOSURE'[HAS_MISSING_SEVERITY] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 8044365d-9e9c-5eb7-9949-a2b711baf944
+
+	/// Claim units with no matching severity row, including the one policy with a count mismatch. Book total is 9,658.
+	measure 'Missing Severity Claim Units' = SUM ( 'FCT_POLICY_EXPOSURE'[MISSING_SEVERITY_CLAIM_UNITS] )
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 8377bae1-b221-57d4-90af-2acbd6b263cb
+
+	/// Policies whose exposure is greater than one year. Book total is 1,224. The maximum exposure is 2.01 years.
+	measure 'Exposure Over One Year' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_POLICY_EXPOSURE' ),
+			    'FCT_POLICY_EXPOSURE'[IS_EXPOSURE_GT_ONE] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: c85eb103-f006-5afd-8834-c8baccef16b1
+
+	/// Policies flagged with an extreme claim count (ClaimNb of 4 or more). Book total is 16.
+	measure 'Extreme Claim Count Policies' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_POLICY_EXPOSURE' ),
+			    'FCT_POLICY_EXPOSURE'[IS_EXTREME_CLAIM_COUNT] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 405fc3f4-562d-50c8-816b-fd2155c1c7b9
+
+	/// Policies where Claim Count and severity row count are both positive and different. Book total is 1 (IDpol 4,158,255).
+	measure 'Policies With Count Mismatch' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_POLICY_EXPOSURE' ),
+			    'FCT_POLICY_EXPOSURE'[HAS_COUNT_MISMATCH_BOTH_POSITIVE] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 361aa0cd-fb04-56ab-bc3e-876875d9f8a9
+
+	/// Sum of claim amount on every severity row, including orphans. Book total is 60,697,930.68.
+	measure 'Claim Amount All Rows' = SUM ( 'FCT_CLAIMS'[CLAIM_AMOUNT] )
+		formatString: #,0.00
+		displayFolder: Claims detail
+		lineageTag: c8be3352-b54d-58d7-b7b4-7f912a53290d
+
+	/// Claim amount on non-orphan severity rows. Must equal Matched Claim Amount at book level: 59,909,216.50.
+	measure 'Matched Claim Amount From Claims' =
+			CALCULATE (
+			    SUM ( 'FCT_CLAIMS'[CLAIM_AMOUNT] ),
+			    'FCT_CLAIMS'[IS_ORPHAN_CLAIM] = FALSE ()
+			)
+		formatString: #,0.00
+		displayFolder: Claims detail
+		lineageTag: 706086f2-629d-59fb-98b8-4ee0eaf8bcbd
+
+	/// Claim amount on orphan severity rows (no matching policy). Book total is 788,714.18. Excluded from official Average Severity and Pure Premium.
+	measure 'Orphan Claim Amount' =
+			CALCULATE (
+			    SUM ( 'FCT_CLAIMS'[CLAIM_AMOUNT] ),
+			    'FCT_CLAIMS'[IS_ORPHAN_CLAIM] = TRUE ()
+			)
+		formatString: #,0.00
+		displayFolder: Quality
+		lineageTag: 637bbdd9-2a37-56d5-ad34-3fb7ca63848d
+
+	/// Orphan severity rows with no matching policy. Book total is 195 rows across 6 policy IDs.
+	measure 'Orphan Claim Rows' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_CLAIMS' ),
+			    'FCT_CLAIMS'[IS_ORPHAN_CLAIM] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 05dc1fcc-0b9c-5082-8cb6-9fbea92b600a
+
+	/// Distinct policy IDs that appear only in the severity file. Book total is 6.
+	measure 'Orphan Claim IDs' =
+			CALCULATE (
+			    DISTINCTCOUNT ( 'FCT_CLAIMS'[POLICY_ID] ),
+			    'FCT_CLAIMS'[IS_ORPHAN_CLAIM] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: 853b17ca-da55-5d69-a107-b6fdebcce28e
+
+	/// Severity rows flagged as duplicate amount rows. Book total is 496.
+	measure 'Duplicate Amount Rows' =
+			CALCULATE (
+			    COUNTROWS ( 'FCT_CLAIMS' ),
+			    'FCT_CLAIMS'[IS_DUPLICATE_AMOUNT_ROW] = TRUE ()
+			)
+		formatString: #,0
+		displayFolder: Quality
+		lineageTag: db6a0dae-8a4d-569c-8aa3-50ab5b4f7a53
+
+	/// Matched claim amount from the claims fact divided by non-orphan claim rows. Must agree with Average Severity at book level: 2,265.51.
+	measure 'Average Severity From Claims' =
+			DIVIDE (
+			    [Matched Claim Amount From Claims],
+			    CALCULATE (
+			        COUNTROWS ( 'FCT_CLAIMS' ),
+			        'FCT_CLAIMS'[IS_ORPHAN_CLAIM] = FALSE ()
+			    )
+			)
+		formatString: #,0.00
+		displayFolder: Claims detail
+		lineageTag: 8a402726-3e77-5c6c-8288-c44fd7414da3
+
+	column Measure
+		dataType: string
+		lineageTag: 6dddefd6-bf50-5995-aa4c-88a047084ead
+		summarizeBy: none
+		isHidden
+
+	partition '_Measures' = calculated
+		mode: import
+		source =
+			ROW ( "Measure", BLANK () )

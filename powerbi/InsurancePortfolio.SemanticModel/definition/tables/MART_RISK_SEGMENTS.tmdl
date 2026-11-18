@@ -1,0 +1,99 @@
+/// Disconnected reference table of pre-aggregated risk segments. Do not mix its columns with official star schema measures in the same visual.
+table MART_RISK_SEGMENTS
+	lineageTag: 62edba61-5671-5c9b-9154-78fc342dd4e1
+
+	column SEGMENT_TYPE
+		dataType: string
+		lineageTag: b2ed7e42-e5c1-545f-8074-7db04d5bcc1e
+		sourceColumn: SEGMENT_TYPE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column SEGMENT_VALUE
+		dataType: string
+		lineageTag: ff74c573-1c6d-564c-843e-fffedd358d59
+		sourceColumn: SEGMENT_VALUE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column SEGMENT_LABEL
+		dataType: string
+		lineageTag: e642e152-4892-5877-bf2e-49b92892af85
+		sourceColumn: SEGMENT_LABEL
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_COUNT
+		dataType: int64
+		formatString: #,0
+		lineageTag: 1e5d4b47-e6af-5b29-bc88-5db9003d2d20
+		sourceColumn: POLICY_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column EXPOSURE_YEARS
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 5dccebb3-3894-5f19-8836-5f2a91556988
+		sourceColumn: EXPOSURE_YEARS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_COUNT
+		dataType: int64
+		formatString: #,0
+		lineageTag: 74e9ac91-0460-504c-8a6d-493d3b39aea7
+		sourceColumn: CLAIM_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_FREQUENCY
+		dataType: double
+		formatString: 0.000000
+		lineageTag: f0ef1b4f-0418-5312-9976-c810c47ae7a1
+		sourceColumn: CLAIM_FREQUENCY
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column SEVERITY_ROW_COUNT
+		dataType: int64
+		formatString: #,0
+		lineageTag: 9f07f8cc-bae3-5919-a41c-1989775d12c4
+		sourceColumn: SEVERITY_ROW_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column MATCHED_CLAIM_AMOUNT
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 3e0b0174-f785-5fc9-925d-1680a0a84344
+		sourceColumn: MATCHED_CLAIM_AMOUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column AVERAGE_SEVERITY
+		dataType: double
+		formatString: #,0.00
+		lineageTag: f9f29169-d15f-56f3-95e5-2f08e6819777
+		sourceColumn: AVERAGE_SEVERITY
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column PURE_PREMIUM
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 29d1d50b-be91-5079-a069-71d0faf15330
+		sourceColumn: PURE_PREMIUM
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition MART_RISK_SEGMENTS = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="MART_RISK_SEGMENTS",Kind="Table"]}[Data]
+			in
+				#"DataTable"

@@ -1,0 +1,182 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "801a47eed5d90f1d8ce2",
+  "position": {
+    "x": 888,
+    "y": 488,
+    "z": 510,
+    "height": 216,
+    "width": 376,
+    "tabOrder": 510
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "About this book",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "5pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "These figures are for the public freMTPL2 observation book, approximately 2011 to 2013. They are not a live Guidewire extract. The star schema in Snowflake is the layer that would sit behind a Qlik to Power BI migration.",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "5pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Claim Frequency uses Claim Count (ClaimNb), not the severity row count. Average Severity and Pure Premium use matched claim amounts only. There is no premium in the source, so this model has no Loss Ratio measure.",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "5pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Book period: ",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "freMTPL2 observation book (approximately 2011 to 2013)",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "showCopyVisualImageButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showFilterRestatementButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showFocusModeButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showPinButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

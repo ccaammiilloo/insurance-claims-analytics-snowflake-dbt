@@ -1,0 +1,130 @@
+/// Policy exposure fact. Grain is one row per policy. Use this table for exposure, claim counts, frequency, and pure premium.
+table FCT_POLICY_EXPOSURE
+	lineageTag: 49f76141-5f88-5d78-8068-ecc930a0f53b
+
+	column POLICY_SK
+		dataType: string
+		lineageTag: c572cc71-041a-5ad0-977e-e15568dd159c
+		sourceColumn: POLICY_SK
+		summarizeBy: none
+		isKey
+		isUnique
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 85c40b10-92b6-5580-9c50-a226a9752fec
+		sourceColumn: POLICY_ID
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column VEHICLE_SK
+		dataType: string
+		lineageTag: c63aee8e-2f35-53aa-a2e2-65aa2c915b2d
+		sourceColumn: VEHICLE_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column DRIVER_SK
+		dataType: string
+		lineageTag: 8eaa34df-de41-5406-8b0a-06e586f59541
+		sourceColumn: DRIVER_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column EXPOSURE_YEARS
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 1f643df3-aa90-5657-9e09-14ea12106d8b
+		sourceColumn: EXPOSURE_YEARS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_COUNT
+		dataType: int64
+		formatString: #,0
+		lineageTag: 36a748e9-1a8b-5d08-9e41-360940c7e389
+		sourceColumn: CLAIM_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column SEVERITY_ROW_COUNT
+		dataType: int64
+		formatString: #,0
+		lineageTag: aae6791c-e2c5-532e-a4ed-6e6bb171d71e
+		sourceColumn: SEVERITY_ROW_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column MATCHED_CLAIM_AMOUNT
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 4fa67743-6453-54b7-91a9-aef3861df882
+		sourceColumn: MATCHED_CLAIM_AMOUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_COUNT_MATCHES_SEVERITY_ROWS
+		dataType: boolean
+		lineageTag: baa28165-3c29-5fc1-808d-9c01d61de13a
+		sourceColumn: CLAIM_COUNT_MATCHES_SEVERITY_ROWS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column HAS_MISSING_SEVERITY
+		dataType: boolean
+		lineageTag: 5f8105f2-348c-59c8-ae71-01f9e6795ffb
+		sourceColumn: HAS_MISSING_SEVERITY
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column HAS_UNEXPECTED_SEVERITY
+		dataType: boolean
+		lineageTag: ffe2b51e-083e-56b5-a36c-50ba7e4683a3
+		sourceColumn: HAS_UNEXPECTED_SEVERITY
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column HAS_COUNT_MISMATCH_BOTH_POSITIVE
+		dataType: boolean
+		lineageTag: 276ccd48-bb19-5da9-b1de-858f818f1079
+		sourceColumn: HAS_COUNT_MISMATCH_BOTH_POSITIVE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column MISSING_SEVERITY_CLAIM_UNITS
+		dataType: int64
+		formatString: #,0
+		lineageTag: 5b1e7845-6760-5a5d-b66c-092d0ec3f8b0
+		sourceColumn: MISSING_SEVERITY_CLAIM_UNITS
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_EXPOSURE_GT_ONE
+		dataType: boolean
+		lineageTag: c0799c03-243c-5e6d-b099-7c682ae2bba3
+		sourceColumn: IS_EXPOSURE_GT_ONE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_EXTREME_CLAIM_COUNT
+		dataType: boolean
+		lineageTag: dbb544ee-7841-5d86-b616-9028b147179e
+		sourceColumn: IS_EXTREME_CLAIM_COUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition FCT_POLICY_EXPOSURE = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="FCT_POLICY_EXPOSURE",Kind="Table"]}[Data]
+			in
+				#"DataTable"

@@ -1,0 +1,94 @@
+/// Claims fact. Grain is one row per severity record. Orphan claims have a null POLICY_SK and stay in the table. Official severity and pure premium exclude them.
+table FCT_CLAIMS
+	lineageTag: ea969a07-8f84-5fda-9bbb-c9074309abdd
+
+	column CLAIM_SK
+		dataType: string
+		lineageTag: 0660f94c-7e47-5ca8-8292-cb440e095acc
+		sourceColumn: CLAIM_SK
+		summarizeBy: none
+		isKey
+		isUnique
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_SEQUENCE
+		dataType: int64
+		formatString: 0
+		lineageTag: fc1c18c1-c721-5799-a2b3-2c2a91a7ae5d
+		sourceColumn: CLAIM_SEQUENCE
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: b2471ae6-4937-5aca-a4d1-5159227d373b
+		sourceColumn: POLICY_ID
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column POLICY_SK
+		dataType: string
+		lineageTag: 8de16f39-504e-591d-a408-f70a9b3004a7
+		sourceColumn: POLICY_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column VEHICLE_SK
+		dataType: string
+		lineageTag: 93f324f3-71cc-582a-a656-a0e22b370422
+		sourceColumn: VEHICLE_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column DRIVER_SK
+		dataType: string
+		lineageTag: ac41ea94-da72-5356-b3e6-6839e990f4e2
+		sourceColumn: DRIVER_SK
+		summarizeBy: none
+		isHidden
+
+		annotation SummarizationSetBy = Automatic
+	column CLAIM_AMOUNT
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 8eb5d869-4694-5be3-acec-7fd7692ce42f
+		sourceColumn: CLAIM_AMOUNT
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_ORPHAN_CLAIM
+		dataType: boolean
+		lineageTag: 76644063-6a43-5fa2-9460-c2b4d461f255
+		sourceColumn: IS_ORPHAN_CLAIM
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column IS_DUPLICATE_AMOUNT_ROW
+		dataType: boolean
+		lineageTag: 8f6705a1-3634-5d49-bfc4-8762432dd5d2
+		sourceColumn: IS_DUPLICATE_AMOUNT_ROW
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	column SRC_ROW_NUMBER
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a2103a8-a4ad-5912-a063-fb47873ee99a
+		sourceColumn: SRC_ROW_NUMBER
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+	partition FCT_CLAIMS = m
+		mode: import
+		source =
+			let
+				Source = Snowflake.Databases(SnowflakeServer, SnowflakeWarehouse, [Role=SnowflakeRole, Implementation="2.0"]),
+				#"Db" = Source{[Name="INSURANCE_PORTFOLIO",Kind="Database"]}[Data],
+				#"Schema" = #"Db"{[Name="MARTS",Kind="Schema"]}[Data],
+				#"DataTable" = #"Schema"{[Name="FCT_CLAIMS",Kind="Table"]}[Data]
+			in
+				#"DataTable"

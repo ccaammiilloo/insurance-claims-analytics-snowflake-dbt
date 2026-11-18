@@ -1,0 +1,20 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["SnowflakeServer","SnowflakeWarehouse","SnowflakeRole","DIM_POLICY","DIM_VEHICLE","DIM_DRIVER","FCT_POLICY_EXPOSURE","FCT_CLAIMS","MART_RISK_SEGMENTS"]
+
+ref table DIM_POLICY
+ref table DIM_VEHICLE
+ref table DIM_DRIVER
+ref table FCT_POLICY_EXPOSURE
+ref table FCT_CLAIMS
+ref table MART_RISK_SEGMENTS
+ref table '_Measures'

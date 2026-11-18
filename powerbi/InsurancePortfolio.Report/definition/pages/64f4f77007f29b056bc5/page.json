@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "64f4f77007f29b056bc5",
+  "displayName": "Risk Drivers",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

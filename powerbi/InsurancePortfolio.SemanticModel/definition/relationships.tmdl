@@ -1,0 +1,41 @@
+relationship FCT_POLICY_EXPOSURE_DIM_POLICY
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_POLICY_EXPOSURE.POLICY_SK
+	toColumn: DIM_POLICY.POLICY_SK
+
+relationship FCT_POLICY_EXPOSURE_DIM_VEHICLE
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_POLICY_EXPOSURE.VEHICLE_SK
+	toColumn: DIM_VEHICLE.VEHICLE_SK
+
+relationship FCT_POLICY_EXPOSURE_DIM_DRIVER
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_POLICY_EXPOSURE.DRIVER_SK
+	toColumn: DIM_DRIVER.DRIVER_SK
+
+relationship FCT_CLAIMS_DIM_POLICY
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_CLAIMS.POLICY_SK
+	toColumn: DIM_POLICY.POLICY_SK
+
+relationship FCT_CLAIMS_DIM_VEHICLE
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_CLAIMS.VEHICLE_SK
+	toColumn: DIM_VEHICLE.VEHICLE_SK
+
+relationship FCT_CLAIMS_DIM_DRIVER
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+	fromColumn: FCT_CLAIMS.DRIVER_SK
+	toColumn: DIM_DRIVER.DRIVER_SK

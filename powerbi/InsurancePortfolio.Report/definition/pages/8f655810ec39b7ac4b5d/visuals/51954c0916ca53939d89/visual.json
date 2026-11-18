@@ -1,0 +1,233 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "51954c0916ca53939d89",
+  "position": {
+    "x": 16,
+    "y": 436,
+    "z": 500,
+    "height": 268,
+    "width": 1248,
+    "tabOrder": 500
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Reconciliation notes (full book)",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "6pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Missing severity. ",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "9,116 policies have a claim count greater than zero and no severity row. Those rows account for 9,658 missing claim units. That total includes one extra unit from IDpol 4,158,255, which has a Claim Count of 2 and only one severity row (the Policies With Count Mismatch card should show 1).",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "4pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Orphan claims. ",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "195 severity rows (6 policy IDs) have no matching policy. Their amount is 788,714.18. They stay in FCT_CLAIMS with a blank policy relationship and are excluded from official Average Severity and Pure Premium.",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "4pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Other checks. ",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "496 severity rows are flagged as duplicate amount rows. 1,224 policies have exposure greater than one year (maximum 2.01). 16 policies have an extreme claim count (4 or more).",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "",
+                    "textStyle": {
+                      "fontSize": "4pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Amount tie-out. ",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#1B365D",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "Matched Claim Amount and Matched Claim Amount From Claims must both equal 59,909,216.50. Claim Amount All Rows is 60,697,930.68 (matched plus orphan). There is no Loss Ratio measure because the source has no premium.",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#3B3B3B",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "showCopyVisualImageButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showFilterRestatementButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showFocusModeButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showPinButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
