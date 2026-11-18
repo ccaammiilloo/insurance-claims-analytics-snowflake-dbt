@@ -1,0 +1,35 @@
+name: insurance_portfolio
+version: "1.0.0"
+config-version: 2
+profile: insurance_portfolio
+require-dbt-version: [">=1.8.0", "<2.0.0"]
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+clean-targets: ["target", "dbt_packages", "logs"]
+
+flags:
+  send_anonymous_usage_stats: false
+
+seeds:
+  insurance_portfolio:
+    +schema: seeds
+    +quote_columns: false
+
+models:
+  insurance_portfolio:
+    +materialized: view
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table

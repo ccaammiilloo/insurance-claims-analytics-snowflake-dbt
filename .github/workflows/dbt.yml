@@ -1,0 +1,44 @@
+name: dbt build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    env:
+      BOOK_SCOPE: sample
+      DATA_DIR: data/sample
+      DUCKDB_PATH: data/warehouse/insurance.duckdb
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Load sample raw tables into DuckDB
+        run: python scripts/load_raw.py --target duckdb --data-dir data/sample
+
+      - name: dbt deps, build, and docs
+        working-directory: dbt
+        env:
+          DUCKDB_PATH: ../data/warehouse/insurance.duckdb
+        run: |
+          dbt deps --profiles-dir .
+          dbt build --profiles-dir . --target dev --vars 'book_scope: sample'
+          dbt docs generate --profiles-dir . --target dev
+
+      - name: Reconcile mart totals to the sample expectations
+        env:
+          DUCKDB_PATH: data/warehouse/insurance.duckdb
+          BOOK_SCOPE: sample
+        run: python scripts/verify_marts.py --scope sample

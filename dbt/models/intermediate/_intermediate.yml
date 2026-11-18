@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: int_policy_claim_reconciliation
+    description: >
+      Compares the policy file claim count with the number of severity rows
+      and the matched claim amount for each policy. Orphan claims are
+      excluded from the severity side because they have no policy row.
+      This model is the place to study the 9116 policies with a positive
+      claim count and no severity rows, and the one policy whose two
+      counts are both positive and different.
+    columns:
+      - name: policy_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - unique
+          - not_null
+      - name: claim_count
+        description: Original ClaimNb from the policy file.
+      - name: severity_row_count
+        description: Count of matched severity rows for the policy.
+      - name: severity_amount
+        description: Sum of matched claim amounts for the policy.
+      - name: has_missing_severity
+        description: True when claim_count is greater than 0 and there is no severity row.

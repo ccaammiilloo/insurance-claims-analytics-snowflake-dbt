@@ -1,0 +1,13 @@
+{
+  "seed": 42,
+  "policy_count": 5000,
+  "severity_rows": 2112,
+  "exposure_years": 2947.6,
+  "claim_count": 2641,
+  "matched_claim_amount": 5306678.03,
+  "missing_severity_policies": 500,
+  "orphan_rows": 0,
+  "n_matched_claim_policies": 2000,
+  "n_missing_severity": 500,
+  "n_no_claims": 2500
+}

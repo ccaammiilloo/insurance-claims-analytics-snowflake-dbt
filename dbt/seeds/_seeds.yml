@@ -1,0 +1,22 @@
+version: 2
+
+seeds:
+  - name: region_names
+    description: >
+      Official INSEE region names for the 1970 to 2015 classification used
+      in freMTPL2. This is an external reference map, not a column from the
+      source files.
+    config:
+      column_types:
+        region_code: varchar
+        region_name: varchar
+    columns:
+      - name: region_code
+        description: Source region code such as R11.
+        data_tests:
+          - unique
+          - not_null
+      - name: region_name
+        description: Standard INSEE name for the 1970 to 2015 region code.
+        data_tests:
+          - not_null

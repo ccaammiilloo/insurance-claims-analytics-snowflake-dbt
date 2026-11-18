@@ -1,0 +1,23 @@
+region_code,region_name
+R11,Île-de-France
+R21,Champagne-Ardenne
+R22,Picardie
+R23,Haute-Normandie
+R24,Centre
+R25,Basse-Normandie
+R26,Bourgogne
+R31,Nord-Pas-de-Calais
+R41,Lorraine
+R42,Alsace
+R43,Franche-Comté
+R52,Pays de la Loire
+R53,Bretagne
+R54,Poitou-Charentes
+R72,Aquitaine
+R73,Midi-Pyrénées
+R74,Limousin
+R82,Rhône-Alpes
+R83,Auvergne
+R91,Languedoc-Roussillon
+R93,Provence-Alpes-Côte d'Azur
+R94,Corse

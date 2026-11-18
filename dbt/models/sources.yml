@@ -1,0 +1,115 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Landing tables built by scripts/load_raw.py from the public freMTPL2
+      files. They stand in for extracts from a policy system and a claims
+      system. They are not a Guidewire extract.
+    schema: raw
+    tables:
+      - name: policies
+        description: One row per policy identifier from freMTPL2freq. Grain is policy_id.
+        columns:
+          - name: policy_sk
+            description: Deterministic surrogate key. MD5 of the literal policy and policy_id.
+            data_tests:
+              - unique
+              - not_null
+          - name: policy_id
+            description: Original IDpol after an integer cast.
+            data_tests:
+              - unique
+              - not_null
+          - name: claim_count
+            description: Original ClaimNb. Kept even when it disagrees with severity rows.
+            data_tests:
+              - not_null
+          - name: exposure_years
+            description: Original Exposure, in years.
+            data_tests:
+              - not_null
+          - name: area
+            description: Original Area code, A rural through F urban centre.
+          - name: bonus_malus
+            description: Original French bonus malus coefficient.
+          - name: density
+            description: Original Density after an integer cast.
+          - name: region
+            description: Original Region code from the 1970 to 2015 classification.
+          - name: src_system
+            description: Pipeline label FREMTPL2_FREQ. Not a Guidewire system code.
+          - name: src_file_name
+            description: Source file name freMTPL2freq.parquet.
+          - name: src_row_number
+            description: One based row number in the source file.
+          - name: loaded_at
+            description: UTC timestamp of the loader run. Pipeline metadata only.
+
+      - name: vehicles
+        description: One vehicle per policy. The source already has a single vehicle on each policy row.
+        columns:
+          - name: vehicle_sk
+            description: Deterministic surrogate key. MD5 of the literal vehicle and policy_id.
+            data_tests:
+              - unique
+              - not_null
+          - name: policy_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'policies')
+                    field: policy_id
+          - name: veh_power
+            description: Original VehPower.
+          - name: veh_age
+            description: Original VehAge in years.
+          - name: veh_brand
+            description: Original anonymized VehBrand code.
+          - name: veh_gas
+            description: Original VehGas, Diesel or Regular.
+
+      - name: drivers
+        description: One recorded driver per policy. The source has only driver age.
+        columns:
+          - name: driver_sk
+            description: Deterministic surrogate key. MD5 of the literal driver and policy_id.
+            data_tests:
+              - unique
+              - not_null
+          - name: policy_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'policies')
+                    field: policy_id
+          - name: driv_age
+            description: Original DrivAge in years.
+
+      - name: claims
+        description: >
+          One row per freMTPL2sev record. There is no native claim number.
+          policy_sk is null for the six known policy identifiers that are
+          absent from the frequency file.
+        columns:
+          - name: claim_sk
+            description: Deterministic surrogate key. MD5 of the literal claim, policy_id, and src_row_number.
+            data_tests:
+              - unique
+              - not_null
+          - name: claim_sequence
+            description: Derived 1 to n within policy_id, in source file order.
+            data_tests:
+              - not_null
+          - name: policy_id
+            description: Original IDpol. Always present, even for orphan claims.
+            data_tests:
+              - not_null
+          - name: policy_sk
+            description: Looked up from policies. Null for the six orphan policy identifiers.
+          - name: claim_amount
+            description: Original ClaimAmount.
+            data_tests:
+              - not_null

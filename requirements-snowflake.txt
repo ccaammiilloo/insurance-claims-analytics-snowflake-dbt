@@ -1,0 +1,3 @@
+# Install only when loading or running dbt against Snowflake.
+snowflake-connector-python>=3.12.0
+dbt-snowflake>=1.10,<2.0

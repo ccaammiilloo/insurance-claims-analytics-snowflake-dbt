@@ -1,0 +1,212 @@
+version: 2
+
+models:
+  - name: stg_policies
+    description: >
+      Cleaned policy grain from raw.policies. Types are standardized.
+      bonus_malus_band is a documented derived grouping, not a source column.
+      Flags mark exposure above one year and claim counts of four or more.
+    columns:
+      - name: policy_sk
+        description: Deterministic policy surrogate key.
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        description: Original policy identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: claim_count
+        description: Original ClaimNb from the policy file.
+        data_tests:
+          - not_null
+      - name: exposure_years
+        description: Original exposure in years. Values can exceed one.
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                column_name: exposure_years
+                min_value: 0
+                max_value: 3
+                inclusive: false
+      - name: area
+        description: Area code A through F.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['A', 'B', 'C', 'D', 'E', 'F']
+      - name: bonus_malus
+        data_tests:
+          - not_null
+      - name: bonus_malus_band
+        description: >
+          Derived band. 50 is the maximum bonus. 51 to 99 are other bonus
+          values. 100 is the reference. 101 and above are malus.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - '50 (maximum bonus)'
+                  - '51-80'
+                  - '81-99'
+                  - '100 (reference)'
+                  - '101-150'
+                  - '151+'
+      - name: density
+        data_tests:
+          - not_null
+      - name: region
+        description: Policy region code.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 'R11'
+                  - 'R21'
+                  - 'R22'
+                  - 'R23'
+                  - 'R24'
+                  - 'R25'
+                  - 'R26'
+                  - 'R31'
+                  - 'R41'
+                  - 'R42'
+                  - 'R43'
+                  - 'R52'
+                  - 'R53'
+                  - 'R54'
+                  - 'R72'
+                  - 'R73'
+                  - 'R74'
+                  - 'R82'
+                  - 'R83'
+                  - 'R91'
+                  - 'R93'
+                  - 'R94'
+      - name: is_exposure_gt_one
+        description: True when exposure_years is greater than 1.
+      - name: is_extreme_claim_count
+        description: True when claim_count is 4 or more.
+
+  - name: stg_vehicles
+    description: >
+      Cleaned vehicle grain from raw.vehicles. veh_age_band is a documented
+      derived grouping. is_vehicle_age_sentinel marks ages 99 and 100, which
+      may be caps or codes. The file does not label them.
+    columns:
+      - name: vehicle_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_policies')
+                field: policy_sk
+      - name: policy_id
+        data_tests:
+          - unique
+          - not_null
+      - name: veh_gas
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Diesel', 'Regular']
+      - name: veh_brand
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B10', 'B11', 'B12', 'B13', 'B14']
+      - name: veh_age_band
+        description: Derived vehicle age band. Cut points are 0, 1 to 4, 5 to 9, 10 to 14, 15 to 19, and 20+.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['0', '1-4', '5-9', '10-14', '15-19', '20+']
+
+  - name: stg_drivers
+    description: >
+      Cleaned driver grain from raw.drivers. Only driver age is available.
+      driv_age_band is a documented derived grouping. is_driver_age_sentinel
+      marks ages 99 and 100.
+    columns:
+      - name: driver_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_policies')
+                field: policy_sk
+      - name: policy_id
+        data_tests:
+          - unique
+          - not_null
+      - name: driv_age_band
+        description: Derived driver age band. Cut points are 18 to 25, then 10 year bands, then 76+.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['18-25', '26-35', '36-45', '46-55', '56-65', '66-75', '76+']
+
+  - name: stg_claims
+    description: >
+      Cleaned claim grain from raw.claims. is_orphan_claim is true when
+      policy_sk is null. Those rows belong to six policy identifiers that
+      are absent from the frequency file. The relationship test on policy_sk
+      is set to warn for that known gap. is_duplicate_amount_row is true
+      when another row shares the same policy_id and claim_amount.
+    columns:
+      - name: claim_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: claim_sequence
+        data_tests:
+          - not_null
+      - name: policy_id
+        description: >
+          Original policy identifier. The relationship test is set to warn
+          because six policy identifiers in the severity file are absent
+          from the policy file.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_policies')
+                field: policy_id
+              config:
+                severity: warn
+      - name: policy_sk
+        description: Null for the six orphan policy identifiers.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_policies')
+                field: policy_sk
+              config:
+                where: "policy_sk is not null"
+      - name: claim_amount
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                column_name: claim_amount
+                min_value: 0
+                inclusive: false
+      - name: is_orphan_claim
+        description: True when the claim has no matching policy in the frequency file.

@@ -1,0 +1,194 @@
+version: 2
+
+models:
+  - name: dim_policy
+    description: >
+      Policy dimension for Power BI. Includes area, region, the INSEE
+      region name, bonus malus, and the derived bonus malus band.
+      book_period_label is a reporting convention from the CASdatasets
+      documentation. It is not a source date.
+    columns:
+      - name: policy_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - unique
+          - not_null
+      - name: area
+        data_tests:
+          - not_null
+      - name: region
+        data_tests:
+          - not_null
+      - name: region_name
+        description: INSEE name joined from the region_names seed.
+        data_tests:
+          - not_null
+      - name: bonus_malus_band
+        data_tests:
+          - not_null
+      - name: book_period_label
+        description: Reporting label only. The files have no policy dates.
+
+  - name: dim_vehicle
+    description: Vehicle dimension for Power BI. One vehicle per policy in this book.
+    columns:
+      - name: vehicle_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_sk
+      - name: veh_age_band
+        data_tests:
+          - not_null
+      - name: veh_gas
+        data_tests:
+          - not_null
+
+  - name: dim_driver
+    description: Driver dimension for Power BI. The source provides only driver age.
+    columns:
+      - name: driver_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_sk
+      - name: driv_age_band
+        data_tests:
+          - not_null
+
+  - name: fct_claims
+    description: >
+      Claim level fact. One row per severity record. is_orphan_claim is
+      true for claims whose policy identifier is not in the policy file.
+      Matched amount totals should use only rows where is_orphan_claim
+      is false. The policy_id relationship test is set to warn for the
+      known orphan identifiers.
+    columns:
+      - name: claim_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: policy_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_id
+              config:
+                severity: warn
+      - name: policy_sk
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_sk
+              config:
+                where: "policy_sk is not null"
+      - name: claim_amount
+        data_tests:
+          - not_null
+
+  - name: fct_policy_exposure
+    description: >
+      Policy level fact used for exposure, claim counts, frequency, and
+      pure premium. claim_count is the original ClaimNb. matched_claim_amount
+      is the sum of severity rows that match the policy. Orphan claim
+      amounts are not included.
+    columns:
+      - name: policy_sk
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_sk
+      - name: vehicle_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_vehicle')
+                field: vehicle_sk
+      - name: driver_sk
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_driver')
+                field: driver_sk
+      - name: exposure_years
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                column_name: exposure_years
+                min_value: 0
+                max_value: 3
+                inclusive: false
+      - name: claim_count
+        data_tests:
+          - not_null
+
+  - name: mart_risk_segments
+    description: >
+      Reporting mart with frequency, severity, and pure premium by area,
+      region, fuel type, driver age band, vehicle age band, and bonus
+      malus band. Frequency uses claim_count divided by exposure_years.
+      Severity and pure premium use matched claim amounts only. There is
+      no premium in the source, so this mart does not compute a loss ratio.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - segment_type
+              - segment_value
+    columns:
+      - name: segment_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - area
+                  - region
+                  - veh_gas
+                  - driv_age_band
+                  - veh_age_band
+                  - bonus_malus_band
+      - name: segment_value
+        data_tests:
+          - not_null
+      - name: policy_count
+        data_tests:
+          - not_null
+      - name: exposure_years
+        data_tests:
+          - not_null
+      - name: claim_count
+        data_tests:
+          - not_null
+      - name: claim_frequency
+        description: sum of ClaimNb divided by sum of exposure.
+      - name: matched_claim_amount
+        description: Sum of claim amounts for policies in the segment, excluding orphan claims.
+      - name: average_severity
+        description: Matched claim amount divided by the count of matched severity rows.
+      - name: pure_premium
+        description: Matched claim amount divided by exposure years. This is not a loss ratio.
