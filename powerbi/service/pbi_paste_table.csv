@@ -1,0 +1,76 @@
+segment_type,segment_label,sort_order,policy_count,exposure,claim_count,matched_claim_amount,matched_severity_rows,policies_with_claims,dq_value,dq_description
+portfolio,Book total,0,678013,358499.45,36102,59909216.50,26444,34060,,
+driver_age_band,18-25,18,38895,16227.90326297,2841,12307261.54,2403,2623,,
+driver_age_band,26-35,26,149183,69266.77807546,6662,10607248.80,5167,6303,,
+driver_age_band,36-45,36,170352,87702.33628716,8397,12119011.84,6315,7972,,
+driver_age_band,46-55,46,161899,89268.77640842,9256,12326494.29,6622,8718,,
+driver_age_band,56-65,56,90691,51775.55326147,4748,6267615.63,3316,4483,,
+driver_age_band,66-75,66,48049,30766.99347631,2873,4104039.55,1770,2722,,
+driver_age_band,76+,76,18944,13491.10469122,1325,2177544.85,851,1239,,
+vehicle_age_band,0,0,57739,16719.02872895,5205,2344917.42,1181,4922,,
+vehicle_age_band,1-4,1,224161,112298.38519501,10301,17328686.67,8232,9665,,
+vehicle_age_band,5-9,5,171936,100255.43779551,9914,15987956.00,8044,9366,,
+vehicle_age_band,10-14,10,148835,86098.45377425,7764,19053109.88,6495,7325,,
+vehicle_age_band,15-19,15,63655,35981.16432143,2517,4595039.24,2173,2406,,
+vehicle_age_band,20+,20,11687,7146.97564788,401,599507.29,319,376,,
+area,A,1,103957,61969.37771240,5063,7739630.67,3364,4831,,
+area,B,2,75459,43012.32393068,3800,8873979.52,2633,3630,,
+area,C,3,191880,104449.00378473,9875,14612072.43,7093,9356,,
+area,D,4,151596,77120.19169174,8428,14486501.16,6458,7892,,
+area,E,5,137167,63819.31426978,7805,13017426.30,6122,7296,,
+area,F,6,17954,8129.23407366,1131,1179606.42,774,1055,,
+region,Île-de-France,11,69791,30208.64195449,3978,4563221.86,2591,3713,,
+region,Champagne-Ardenne,21,3026,1205.83150909,160,481248.34,77,149,,
+region,Picardie,22,7994,3574.41022082,439,687624.87,314,421,,
+region,Haute-Normandie,23,8784,3177.68218130,303,327493.58,220,284,,
+region,Centre,24,160601,102712.90338574,9204,19074802.36,6475,8808,,
+region,Basse-Normandie,25,10893,6657.90114230,633,929847.31,452,605,,
+region,Bourgogne,26,10492,5025.35860918,511,636298.04,345,488,,
+region,Nord-Pas-de-Calais,31,27285,11497.97426903,1176,1634689.72,944,1092,,
+region,Lorraine,41,12990,8113.77797215,611,1034301.30,468,589,,
+region,Alsace,42,2200,1209.11582304,133,121424.99,92,124,,
+region,Franche-Comté,43,1326,564.01294633,57,76534.11,38,54,,
+region,Pays de la Loire,52,38751,21934.03116476,2010,2570964.93,1576,1909,,
+region,Bretagne,53,42122,27753.46367468,2702,3901051.25,1871,2575,,
+region,Poitou-Charentes,54,19046,11163.40871547,968,1305107.78,800,920,,
+region,Aquitaine,72,31329,14322.16669212,1348,1916138.54,1055,1264,,
+region,Midi-Pyrénées,73,17141,7020.10855453,688,539385.27,369,648,,
+region,Limousin,74,4567,2395.99454226,259,280285.14,197,242,,
+region,Rhône-Alpes,82,84752,45347.41728572,5032,10278303.85,4233,4760,,
+region,Auvergne,83,5287,2322.88422861,189,183974.83,141,181,,
+region,Languedoc-Roussillon,91,35805,14736.10417696,1547,2030911.08,1068,1389,,
+region,Provence-Alpes-Côte d'Azur,93,79315,35790.32101505,3907,6871024.80,2986,3625,,
+region,Corse,94,4516,1765.93539936,247,464582.55,132,220,,
+vehicle_power,4,4,115349,60073.63730369,5699,9410083.43,4003,5314,,
+vehicle_power,5,5,124821,68173.34882102,7278,8837747.14,5115,6879,,
+vehicle_power,6,6,148976,82524.21017218,8381,14385946.83,6305,7931,,
+vehicle_power,7,7,145401,77950.45670035,7627,12426397.16,5593,7217,,
+vehicle_power,8,8,46956,22684.61630511,1922,2954665.51,1645,1814,,
+vehicle_power,9,9,30085,15348.21365596,1754,6265052.65,1220,1659,,
+vehicle_power,10,10,31354,15375.01082416,1789,2853312.33,1217,1689,,
+vehicle_power,11,11,18352,8497.77845198,897,1312132.16,714,842,,
+vehicle_power,12,12,8214,3792.03834269,359,707682.28,296,340,,
+vehicle_power,13,13,3229,1637.25532225,153,310503.58,139,147,,
+vehicle_power,14,14,2350,1182.35039075,119,321419.99,101,108,,
+vehicle_power,15,15,2926,1260.52917284,124,124273.44,96,120,,
+bonus_malus_band,50 (maximum bonus),50,384156,225233.13090279,18056,22282394.02,11592,17147,,
+bonus_malus_band,51-80,51,213201,101050.84380719,11610,19259285.09,9490,10962,,
+bonus_malus_band,81-99,81,53332,22403.27839359,3373,5620559.25,2786,3156,,
+bonus_malus_band,100 (reference),100,19530,6240.87335654,1721,10187048.58,1320,1582,,
+bonus_malus_band,101-150,101,7585,3476.19080620,1288,2427253.15,1202,1173,,
+bonus_malus_band,151+,151,209,95.12819672,54,132676.41,54,40,,
+fuel,Diesel,1,332136,170660.89312677,16648,27594673.95,13450,15709,,
+fuel,Regular,2,345877,187838.55233628,19454,32314542.55,12994,18351,,
+data_quality,Policies with missing severity,1,,,,,,,9116,Policies with a claim count greater than 0 and no severity row.
+data_quality,Missing severity claim units,2,,,,,,,9658,"Claim units with no matching severity row, including the one extra unit from the count-mismatch policy."
+data_quality,Policies with count mismatch,3,,,,,,,1,"Policies where claim count and severity row count are both positive and different. This is IDpol 4158255 (claim count 2, one severity row)."
+data_quality,Orphan claim rows,4,,,,,,,195,Severity rows with no matching policy. Excluded from official average severity and pure premium.
+data_quality,Orphan claim IDs,5,,,,,,,6,Distinct policy IDs that appear only in the severity file.
+data_quality,Orphan claim amount,6,,,,,,,788714.18,Claim amount on orphan severity rows. Not included in official matched claim amount.
+data_quality,Duplicate amount rows,7,,,,,,,496,Severity rows flagged IS_DUPLICATE_AMOUNT_ROW.
+data_quality,Exposure over one year,8,,,,,,,1224,Policies whose exposure is greater than one year. The maximum exposure is 2.01 years.
+data_quality,Extreme claim count policies,9,,,,,,,16,Policies flagged with an extreme claim count (ClaimNb of 4 or more).
+data_quality,Claim rows (all),10,,,,,,,26639,"All severity rows in FCT_CLAIMS, including orphans."
+data_quality,Matched severity rows,11,,,,,,,26444,Non-orphan severity rows. Must equal official matched severity rows.
+data_quality,Matched claim amount (from claims),12,,,,,,,59909216.50,Sum of claim amount on non-orphan rows. Must equal official matched claim amount.
+data_quality,Claim amount all rows,13,,,,,,,60697930.68,Matched claim amount plus orphan claim amount.

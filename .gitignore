@@ -24,3 +24,7 @@ id_rsa.pub
 **/.pbi/cache.abf
 **/.pbi/*.abf
 *.pbix
+
+# Power BI Service Excel extract. The full book workbook is over 10 MB.
+powerbi/service/*.xlsx
+powerbi/service/*.xls

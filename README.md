@@ -1,6 +1,6 @@
 # Insurance claims analytics with Snowflake, dbt, and Power BI
 
-This project shows how I would support a reporting migration like the one at HDI Global Insurance. Raw policy and claims data lands in Snowflake in a shape that looks like extracts from a Guidewire style policy system and claims system. dbt then stages, tests, and models that data into a star schema. Power BI Desktop is the reporting layer that would replace a legacy Qlik dashboard.
+This project shows how I would support a reporting migration like the one at HDI Global Insurance. Raw policy and claims data lands in Snowflake in a shape that looks like extracts from a Guidewire style policy system and claims system. dbt then stages, tests, and models that data into a star schema. A Power BI Service report is the reporting layer that would replace a legacy Qlik dashboard.
 
 The source is not a live Guidewire extract. It is the public French MTPL book freMTPL2, used here as a stand in for policy and claims feeds. There is no premium column in the files, so this project does not compute a loss ratio and does not invent one.
 
@@ -15,7 +15,7 @@ flowchart LR
   C --> D[dbt staging]
   D --> E[Claim count reconciliation]
   E --> F[Marts: dimensions, facts, risk segments]
-  F --> G[Power BI Desktop]
+  F --> G[Power BI Service]
 ```
 
 The raw layer splits the flat frequency file into `POLICIES`, `VEHICLES`, and `DRIVERS`, and lands each severity row in `CLAIMS`. Surrogate keys and a claim sequence are the only business derivations in that step. dbt adds type cleanup, quality flags, documented age and bonus malus bands, and the measures used for reporting: claim frequency, average severity, and pure premium.
@@ -117,21 +117,37 @@ dbt deps --profiles-dir .
 dbt build --profiles-dir . --target prod
 ```
 
-dbt writes staging, intermediate, marts, and seeds into their own schemas. Power BI should import from the `MARTS` schema: `DIM_POLICY`, `DIM_VEHICLE`, `DIM_DRIVER`, `FCT_POLICY_EXPOSURE`, `FCT_CLAIMS`, and `MART_RISK_SEGMENTS`. The `ANALYTICS` schema is the dbt target schema and may be empty. Measure definitions and the planned report pages are in `docs/power_bi_design.md`.
+dbt writes staging, intermediate, marts, and seeds into their own schemas. Power BI should read from the `MARTS` schema: `DIM_POLICY`, `DIM_VEHICLE`, `DIM_DRIVER`, `FCT_POLICY_EXPOSURE`, `FCT_CLAIMS`, and `MART_RISK_SEGMENTS`. The `ANALYTICS` schema is the dbt target schema and may be empty. The Power BI Service report uses a `segments` table exported from those marts. Measure definitions are in `docs/power_bi_design.md`.
 
 ## Power BI report
 
-The Power BI Desktop project in `powerbi/` is the visualization layer that would replace a Qlik app after the Snowflake and dbt work. Open `powerbi/InsurancePortfolio.pbip`, enter your Snowflake username and password when Desktop prompts you, and refresh. The files have no credentials. A packed copy is at `powerbi/InsurancePortfolio-PBIP.zip`. Spanish step by step instructions are in `docs/powerbi_abrir_es.md`. The totals to check after refresh are in `docs/powerbi_expected_numbers.md`.
+I built the report in Power BI Service (the browser app) on a semantic model named Insurance Portfolio. The model uses one long format table called `segments`. The table has 75 rows: the book total, risk segments (driver age, vehicle age, area, region, vehicle power, bonus malus, and fuel), and 13 data quality checks.
 
-Official measures are Claim Frequency, Average Severity, Pure Premium, Exposure, Claim Count, and the related portfolio and quality measures in the model. There is no Loss Ratio measure, because the source has no premium.
+`scripts/build_powerbi_excel.py` exports the Snowflake `MARTS` tables, through the `INSURANCE_PBI_READONLY` role, to an Excel workbook. That workbook is gitignored because it is large, and importing it in Power BI Service failed on this Pro trial capacity with `CapacityDoesNotSupportPremiumFilesException`. The path that worked was `scripts/build_pbi_paste_table.py`, which aggregates the same marts into `powerbi/service/pbi_paste_table.tsv`. I pasted that file into Power BI Service with Enter data. The measures below are only valid when a visual is filtered to one `segment_type`. An unfiltered sum would count the book more than once.
 
-**Screenshots will be added once the report has been refreshed in Power BI Desktop.** This section is a placeholder on purpose. I am not including mock or generated images here.
+The ten DAX measures in the model are Policy Count, Total Exposure, Claim Count, Claim Frequency, Matched Claim Amount, Matched Severity Rows, Average Severity, Pure Premium, Policies With Claims, and Policies With Claims %. There is no Loss Ratio measure, because the source has no premium. Total Exposure is the sum of exposure years. It is named that way because the table already has an exposure column.
 
-The report has three pages:
+The report has three pages. Some cards use Power BI's compact display (678K, 358.50K, 59.91M), which matches the book totals in the results table above.
 
-1. Portfolio Overview, with the book KPIs and segment charts for area, region, and fuel type.
-2. Risk Drivers, with claim frequency by driver age, vehicle age, vehicle power, area, region, and bonus malus, plus a table that compares claim count with matched severity rows.
-3. Data Quality and Reconciliation, so missing severity, orphan claims, duplicate amount rows, and exposure greater than one year stay visible.
+1. Portfolio Overview, with eight cards filtered to the book: 678,013 policies, 358,499.45 years of exposure, 36,102 claims, a claim frequency of 0.100703, average severity of 2,265.51, pure premium of 167.11, 5.02% of policies with a claim, and 59,909,216.50 of matched claim amount.
+
+![Portfolio Overview in Power BI Service, with eight book level KPI cards](docs/images/powerbi_page1_portfolio_overview.png)
+
+Portfolio Overview in Power BI Service. The cards are filtered to `segment_type` = portfolio.
+
+2. Risk Drivers, with claim frequency by driver age, vehicle age, area, bonus malus, vehicle power, and the top 10 regions. Drivers aged 18 to 25 have a frequency of 0.175069. Frequency rises from 0.081702 in rural Area A to 0.139127 in urban Area F. New vehicles (vehicle age 0) show 0.311322, and the 151+ bonus malus band reaches 0.567655. Corse is the highest frequency region, at 0.139869.
+
+![Risk Drivers page with claim frequency charts by segment](docs/images/powerbi_page2_risk_drivers.png)
+
+Risk Drivers. Each chart is filtered to one `segment_type` so the frequencies are not mixed across segments.
+
+3. Data Quality and Reconciliation, with the 13 quality checks, cards for Matched Claim Amount (59,909,216.50) and Matched Severity Rows (26,444), and a short reconciliation note. Official average severity and pure premium exclude 195 orphan severity rows (6 policy IDs, 788,714.18 of amount) that have no matching policy.
+
+![Data Quality page with the reconciliation table and matched claim cards](docs/images/powerbi_page3_data_quality.png)
+
+Data Quality and Reconciliation. Source issues stay visible instead of being cleaned away.
+
+If you prefer Power BI Desktop, the project in `powerbi/` connects to the same Snowflake marts. Open `powerbi/InsurancePortfolio.pbip`, enter your Snowflake username and password when Desktop prompts you, and refresh. The files have no credentials. A packed copy is at `powerbi/InsurancePortfolio-PBIP.zip`. Spanish step by step instructions are in `docs/powerbi_abrir_es.md`. The totals to check after refresh are in `docs/powerbi_expected_numbers.md`.
 
 ## Project layout
 
@@ -141,10 +157,14 @@ The report has three pages:
 - `notebooks/01_profile.py` and `docs/data_profile.md` hold the full book profile.
 - `dbt/` is the dbt project, with tests that lock the full book totals when `book_scope` is `full`.
 - `sql/snowflake/` has the Snowflake DDL and a `COPY INTO` template.
+- `scripts/build_powerbi_excel.py` exports Snowflake marts to a gitignored Excel workbook.
+- `scripts/build_pbi_paste_table.py` builds the 75 row `segments` table used in Power BI Service.
+- `powerbi/service/` has the paste file, build notes, and small extracts. The Excel workbooks stay gitignored.
 - `docs/power_bi_design.md` describes the star schema and DAX measures.
-- `docs/powerbi_abrir_es.md` is the Spanish guide for opening the Desktop project and taking screenshots.
+- `docs/powerbi_abrir_es.md` is the Spanish guide for opening the Desktop project.
 - `docs/powerbi_expected_numbers.md` is the checklist of book totals to confirm after refresh.
-- `powerbi/` is the Power BI Project (PBIP) with the TMDL semantic model and the three page PBIR report.
+- `docs/images/` has screenshots of the three Power BI Service report pages.
+- `powerbi/` is the Power BI Project (PBIP) with the TMDL semantic model and a three page report for Desktop.
 
 The code in this repository is under the MIT license. The source data remains CC0, with credit to Dutang and Charpentier.
 

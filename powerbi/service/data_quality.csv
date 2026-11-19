@@ -1,0 +1,14 @@
+check_name,value,description
+Policies with missing severity,9116.0,Policies with a claim count greater than 0 and no severity row.
+Missing severity claim units,9658.0,"Claim units with no matching severity row, including the one extra unit from the count-mismatch policy."
+Policies with count mismatch,1.0,"Policies where claim count and severity row count are both positive and different. This is IDpol 4158255 (claim count 2, one severity row)."
+Orphan claim rows,195.0,Severity rows with no matching policy. Excluded from official average severity and pure premium.
+Orphan claim IDs,6.0,Distinct policy IDs that appear only in the severity file.
+Orphan claim amount,788714.18,Claim amount on orphan severity rows. Not included in official matched claim amount.
+Duplicate amount rows,496.0,Severity rows flagged IS_DUPLICATE_AMOUNT_ROW.
+Exposure over one year,1224.0,Policies whose exposure is greater than one year. The maximum exposure is 2.01 years.
+Extreme claim count policies,16.0,Policies flagged with an extreme claim count (ClaimNb of 4 or more).
+Claim rows (all),26639.0,"All severity rows in FCT_CLAIMS, including orphans."
+Matched severity rows,26444.0,Non-orphan severity rows. Must equal SUM(policy_exposure[matched_severity_rows]).
+Matched claim amount (from claims),59909216.5,Sum of claim amount on non-orphan rows. Must equal SUM(policy_exposure[matched_claim_amount]).
+Claim amount all rows,60697930.68,Matched claim amount plus orphan claim amount.

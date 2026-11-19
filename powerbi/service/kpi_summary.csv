@@ -1,0 +1,11 @@
+kpi_name,value,description
+Policy Count,678013.0,"COUNTROWS of policy_exposure. Official book total is 678,013."
+Exposure,358499.45,"SUM of exposure. Official book total is 358,499.45 policy years."
+Claim Count,36102.0,"SUM of claim_count (ClaimNb), not severity row count. Official book total is 36,102."
+Claim Frequency,0.100703,"Claim Count / Exposure. Official book total is 0.100703. This is claims per year, not a percentage."
+Matched Claim Amount,59909216.5,"SUM of matched_claim_amount. Official book total is 59,909,216.50."
+Matched Severity Rows,26444.0,"SUM of matched_severity_rows. Official book total is 26,444."
+Average Severity,2265.51,"Matched Claim Amount / Matched Severity Rows. Official book total is 2,265.51."
+Pure Premium,167.11,Matched Claim Amount / Exposure. Official book total is 167.11. There is no loss ratio because the source has no premium.
+Policies With Claims,34060.0,"SUM of has_claim. Official book total is 34,060."
+Policies With Claims %,0.050235,Policies With Claims / Policy Count. Official book total is 5.02%.
